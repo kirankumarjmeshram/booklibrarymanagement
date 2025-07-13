@@ -12,10 +12,10 @@ function BookCard({ book }) {
       if (!user) return;
       try {
         const res = await axios.get('/api/mybooks', { withCredentials: true });
-        const exists = res.data.find(item => item.bookId._id === book._id);
+        const exists = res.data.find(item => item.bookId?._id === book._id);
         if (exists) setIsAdded(true);
       } catch (err) {
-        console.error('Error checking if book added:', err);
+        console.error('Error checking if book is added:', err);
       }
     };
     checkAdded();
@@ -27,7 +27,7 @@ function BookCard({ book }) {
       await axios.post(`/api/mybooks/${book._id}`, {}, { withCredentials: true });
       setIsAdded(true);
     } catch (err) {
-      alert('Error adding book or it is already in your list.');
+      alert('Error adding book or already added.');
     }
   };
 
@@ -38,8 +38,8 @@ function BookCard({ book }) {
           <Card.Img
             variant="top"
             src={book.coverImage}
-            style={{ maxHeight: '100%', width: 'auto', maxWidth: '100%' }}
             alt={book.title}
+            style={{ maxHeight: '100%', width: 'auto', maxWidth: '100%' }}
           />
         </div>
         <Card.Body className="d-flex flex-column">
