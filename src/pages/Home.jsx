@@ -8,9 +8,14 @@ function Home() {
   const [loading, setLoading] = useState(true);
 
   const fetchBooks = async () => {
-    const res = await axios.get('/api/books');
-    setBooks(res.data);
-    setLoading(false);
+    try {
+      const res = await axios.get('/api/books');
+      setBooks(res.data);
+    } catch (err) {
+      console.error('Error fetching books:', err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -19,9 +24,13 @@ function Home() {
 
   return (
     <Container className="mt-4">
-      <h3>Available Books</h3>
-      {loading ? <Spinner animation="border" /> : (
-        <Row>
+      <h3 className="mb-4">Available Books</h3>
+      {loading ? (
+        <div className="text-center">
+          <Spinner animation="border" />
+        </div>
+      ) : (
+        <Row className="g-4">
           {books.map(book => (
             <BookCard key={book._id} book={book} />
           ))}

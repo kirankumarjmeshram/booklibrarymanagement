@@ -8,9 +8,14 @@ function MyBooks() {
   const [loading, setLoading] = useState(true);
 
   const fetchMyBooks = async () => {
-    const res = await axios.get('/api/mybooks', { withCredentials: true });
-    setMyBooks(res.data);
-    setLoading(false);
+    try {
+      const res = await axios.get('/api/mybooks', { withCredentials: true });
+      setMyBooks(res.data);
+    } catch (err) {
+      console.error('Error fetching my books:', err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -19,9 +24,13 @@ function MyBooks() {
 
   return (
     <Container className="mt-4">
-      <h3>My Books</h3>
-      {loading ? <Spinner animation="border" /> : (
-        <Row>
+      <h3 className="mb-4">My Books</h3>
+      {loading ? (
+        <div className="text-center"><Spinner animation="border" /></div>
+      ) : myBooks.length === 0 ? (
+        <p>No books added yet.</p>
+      ) : (
+        <Row className="g-4">
           {myBooks.map(entry => (
             <MyBookCard key={entry._id} entry={entry} onUpdate={fetchMyBooks} />
           ))}
